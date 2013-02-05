@@ -270,7 +270,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\ravenset\raven_sqlite.cpp"
+				RelativePath="$(RAVENROOT)\raven_sqlite.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"

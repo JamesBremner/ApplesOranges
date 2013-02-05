@@ -30,6 +30,8 @@ cCriteriaTree		 critTree;
 
 cScoreSet theScore;
 
+void ReCalculate( System::Windows::Forms::TreeView^  CritTreeView );
+
 	};
 
 extern cModel theModel;

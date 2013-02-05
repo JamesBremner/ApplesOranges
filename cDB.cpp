@@ -33,6 +33,8 @@ void cAODB::OpenProjectFile(
 	CritTreeView->Nodes->Add( root );
 	LoadTree( 0, root, vcrit );
 
+	dcd::theModel.ReCalculate( CritTreeView );
+
 }
 
 void cAODB::LoadTree( 

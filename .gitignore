@@ -1,5 +1,5 @@
-sqlite.h
-sqlite.cpp
+sqlite3.h
+sqlite3.c
 
 #################
 ## Eclipse

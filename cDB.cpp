@@ -28,10 +28,13 @@ void cAODB::OpenProjectFile(
 		vcrit.push_back( new dcd::cCriterion( myResult, krit ) );
 	}
 
-	CritTreeView->Nodes->Clear();
-	dcd::cCritTreeNode^ root = gcnew dcd::cCritTreeNode( new dcd::cCriterion(L"criteria") );
-	CritTreeView->Nodes->Add( root );
-	LoadTree( 0, root, vcrit );
+	//CritTreeView->Nodes->Clear();
+	//dcd::cCritTreeNode^ root = gcnew dcd::cCritTreeNode( new dcd::cCriterion(1,L"criteria",L"1",
+	//	dcd::cCriterion::numerical) );
+	//CritTreeView->Nodes->Add( root );
+	dcd::theModel.critTree.Clear();
+
+	LoadTree( 0, dcd::theModel.critTree.getRoot(), vcrit );
 
 	dcd::theModel.ReCalculate( CritTreeView );
 

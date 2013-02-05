@@ -82,10 +82,11 @@ class cCriteriaTree
 public:
 	cCriteriaTree(  )
 	{
-		Clear();
+		//Clear();
 	}
 	dcd::cCriterion * getCriterion( int item )	{ static int dum; return (dcd::cCriterion * ) &dum;/*GetItemData( item );*/ }
 	dcd::cCriterion * getSelectedCriterion()			{ return mySelectedCriterion; }
+	dcd::cCritTreeNode^ getRoot()				{ return (dcd::cCritTreeNode^) myView->Nodes[0]; }
 	void			Clear();
 	void			AddASibling();
 	void			AddAChild();
@@ -94,11 +95,12 @@ public:
 	//bool			IsRootSelected()					{ return ( mySelectedCriterium == 0/*GetRootItem() */); }
 	void			setSelected( cCriterion * p )		{ mySelectedCriterion = p; }
 	void			DeleteSelected();
-	void			PropogateScoreUpwards( int item );
+	void			PropogateScoreUpwards( dcd::cCritTreeNode^ current );
+
+	gcroot<System::Windows::Forms::TreeView^>  myView; 
 
 private:
 	cCriterion		* mySelectedCriterion;
-
 
 };
 }

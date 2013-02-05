@@ -65,24 +65,22 @@ void cCriterion::EvaluateScores( cCriterion * parent )
 */
 void cCriteriaTree::Clear()
 {
-	//DeleteAllItems();
-	//wxTreeItemId root = AddRoot("criteria");
-	//SetItemData( root, new dcd::cCriterion(1,"root","1",
-	//	dcd::cCriterion::numerical ) );
-	//mySelectedCriterium = root;
-	static cCriterion null;
-	mySelectedCriterion = &null;
+	myView->Nodes->Clear();
+	dcd::cCritTreeNode^ root = gcnew dcd::cCritTreeNode( new dcd::cCriterion(1,L"criteria",L"1",
+		dcd::cCriterion::numerical) );
+	myView->Nodes->Add( root );
+	mySelectedCriterion = root->getCrit();
 }
 
 void cCriteriaTree::AddAChild()
 {
 	dcd::cCritTreeNode^ newItem = gcnew dcd::cCritTreeNode( new dcd::cCriterion(L"child") );
-	theModel.myCritTreeView->SelectedNode->Nodes->Add(newItem);
+	myView->SelectedNode->Nodes->Add(newItem);
 }
 void cCriteriaTree::AddASibling()
 {
 	dcd::cCritTreeNode^ newItem = gcnew dcd::cCritTreeNode( new dcd::cCriterion(L"sib") );
-	theModel.myCritTreeView->SelectedNode->Parent->Nodes->Add(newItem);
+	myView->SelectedNode->Parent->Nodes->Add(newItem);
 }
 void cCriteriaTree::DeleteSelected()
 {
@@ -96,20 +94,19 @@ void cCriteriaTree::DeleteSelected()
 
   @param[in] current  The criterion in the tree whose scores must be propogated
 */
-void cCriteriaTree::PropogateScoreUpwards( int current )
+void cCriteriaTree::PropogateScoreUpwards( dcd::cCritTreeNode^ current )
 {
-	//dcd::cCriterion * crit_cur = getCriterion( current );
-	//while( current != GetRootItem() ) {
-	//	wxTreeItemId parent = GetItemParent( current );
-	//	dcd::cCriterion * crit_parent = getCriterion( parent );
-	//	float weight = _wtof( crit_cur->getWeight().c_str());
-	//	foreach( dcd::cChoice& choice, theModel.theChoice ) {
-	//		theModel.theScore.AddScore( choice, *crit_parent,
-	//			weight * theModel.theScore.getScore( choice, *crit_cur ) );
-	//	}
-	//	current = parent;
-	//	crit_cur = crit_parent;
-	//}
+	dcd::cCriterion * crit_cur = current->getCrit();
+	while( current != myView->Nodes[0] ) {
+		dcd::cCriterion * crit_parent = ((dcd::cCritTreeNode^)current->Parent)->getCrit();
+		float weight = (float)_wtof( crit_cur->getWeight().c_str());
+		foreach( dcd::cChoice& choice, theModel.theChoice ) {
+			theModel.theScore.AddScore( choice, *crit_parent,
+				weight * theModel.theScore.getScore( choice, *crit_cur ) );
+		}
+		current = (dcd::cCritTreeNode^)current->Parent;
+		crit_cur = crit_parent;
+	}
 
 }
 

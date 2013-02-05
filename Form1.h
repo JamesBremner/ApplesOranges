@@ -29,6 +29,7 @@ namespace applesoranges {
 			//
 			//TODO: Add the constructor code here
 			//
+			dcd::theModel.critTree.myView = CritTreeView;
 		}
 
 	protected:
@@ -331,8 +332,11 @@ public:
 
 	void FillChoices(void)
 	{
+		listChoices->Items->Clear();
 		foreach( dcd::cChoice& choice, dcd::theModel.theChoice ) {
-			listChoices->Items->Add(msclr::interop::marshal_as<System::String ^>(choice.myName.c_str()));
+			ListViewItem^ item = gcnew ListViewItem( msclr::interop::marshal_as<System::String ^>(choice.myName.c_str()), 0 );
+			item->SubItems->Add(dcd::theModel.theScore.getScore(choice,*dcd::theModel.critTree.getRoot()->getCrit()).ToString());
+			listChoices->Items->Add( item );
 		}
 	}
 	void FillScoreChoiceOnCriterion()
@@ -366,11 +370,22 @@ private: System::Void listChoices_SelectedIndexChanged(System::Object^  sender, 
 
 		 */
 private: System::Void ScoreTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+			 // assume blamk means zero
+			 if( ScoreTextBox->Text == L"" )
+				 ScoreTextBox->Text = L"0";
+
+			 // save the new score
 			 dcd::theModel.theScore.Set(
 				 dcd::cScore(
 					dcd::theModel.theChoice.getSelected(),
 					*dcd::theModel.critTree.getSelectedCriterion(),
 					(float)Convert::ToDouble(ScoreTextBox->Text) ) );
+
+			 // recalculate total score
+			 dcd::theModel.ReCalculate( CritTreeView );
+
+			 // display results
+			 FillChoices();
 		 }
 		 /** Add sibling to current criterion */
 private: System::Void AddSib_Click(System::Object^  sender, System::EventArgs^  e) {

@@ -7,22 +7,22 @@ namespace dcd {
 	*/
 	void cModel::ReCalculate( System::Windows::Forms::TreeView^  CritTreeView )
 	{
-		myCritTreeView = CritTreeView;
+		critTree.myView = CritTreeView;
 
-		//dcd::cCritTreeNode^ root = (dcd::cCritTreeNode^)CritTreeView->Nodes[0];
+		dcd::cCritTreeNode^ root = (dcd::cCritTreeNode^)CritTreeView->Nodes[0];
 
-		//// zero the total score
-		//root->getCrit()->ZeroScore();
+		// zero the total score
+		root->getCrit()->ZeroScore();
 
-		//dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)root->FirstNode;
+		dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)root->FirstNode;
 
-		//while( child != nullptr ) {
+		while( child != nullptr ) {
 
-		//	Calculate( child );
+			Calculate( child );
 
-		//	child = (dcd::cCritTreeNode^)root->NextNode;
+			child = (dcd::cCritTreeNode^)root->NextNode;
 
-		//}
+		}
 
 
 	}
@@ -31,16 +31,35 @@ namespace dcd {
 	Calculate total score of criterion, including all children
 
 	*/
-	void cModel::Calculate( dcd::cCritTreeNode^ parent )
+	void cModel::Calculate( dcd::cCritTreeNode^ current )
 	{
-		if( ! parent->Nodes->Count ) {
+		if( ! current->Nodes->Count ) {
 
 			// this is a leaf
 
-			parent->getCrit()->EvaluateScores( parent->getCrit() );
+			current->getCrit()->EvaluateScores(  ((dcd::cCritTreeNode^)current->Parent)->getCrit() );
 
-			critTree.PropogateScoreUpwards( 1 );
+			critTree.PropogateScoreUpwards( current );
+
+			return;
 
 		}
+
+		// we have cildren, so zero any score we muight have
+		current->getCrit()->ZeroScore();
+
+		// loop over all children
+		dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)current->FirstNode;
+
+		while( child != nullptr ) {
+
+			Calculate( child );
+
+			child = (dcd::cCritTreeNode^)current->NextNode;
+
+		}
+
+
+
 	}
 }

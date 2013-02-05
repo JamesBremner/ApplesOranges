@@ -33,7 +33,7 @@ cScoreSet theScore;
 void ReCalculate( System::Windows::Forms::TreeView^  CritTreeView );
 void Calculate( dcd::cCritTreeNode^ parent );
 
-gcroot<System::Windows::Forms::TreeView^>  myCritTreeView; 
+
 
 	};
 

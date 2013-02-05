@@ -65,6 +65,8 @@ namespace applesoranges {
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::Label^  ScoreChoiceOnCriterion;
 	private: System::Windows::Forms::TextBox^  ScoreTextBox;
+	private: System::Windows::Forms::Button^  AddChild;
+	private: System::Windows::Forms::Button^  AddSib;
 
 
 	protected: 
@@ -90,17 +92,19 @@ namespace applesoranges {
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->CritTreeView = (gcnew System::Windows::Forms::TreeView());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
+			this->AddChild = (gcnew System::Windows::Forms::Button());
+			this->AddSib = (gcnew System::Windows::Forms::Button());
 			this->CritWeightTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->CritNameTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->ScoreTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->ScoreChoiceOnCriterion = (gcnew System::Windows::Forms::Label());
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
-			this->ScoreTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->groupBox2->SuspendLayout();
 			this->groupBox3->SuspendLayout();
 			this->groupBox4->SuspendLayout();
@@ -157,6 +161,8 @@ namespace applesoranges {
 			// 
 			// groupBox3
 			// 
+			this->groupBox3->Controls->Add(this->AddChild);
+			this->groupBox3->Controls->Add(this->AddSib);
 			this->groupBox3->Controls->Add(this->CritWeightTextBox);
 			this->groupBox3->Controls->Add(this->CritNameTextBox);
 			this->groupBox3->Controls->Add(this->label2);
@@ -167,6 +173,26 @@ namespace applesoranges {
 			this->groupBox3->TabIndex = 3;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"Criterion";
+			// 
+			// AddChild
+			// 
+			this->AddChild->Location = System::Drawing::Point(119, 91);
+			this->AddChild->Name = L"AddChild";
+			this->AddChild->Size = System::Drawing::Size(75, 23);
+			this->AddChild->TabIndex = 5;
+			this->AddChild->Text = L"Add Child";
+			this->AddChild->UseVisualStyleBackColor = true;
+			this->AddChild->Click += gcnew System::EventHandler(this, &Form1::AddChild_Click);
+			// 
+			// AddSib
+			// 
+			this->AddSib->Location = System::Drawing::Point(10, 92);
+			this->AddSib->Name = L"AddSib";
+			this->AddSib->Size = System::Drawing::Size(75, 23);
+			this->AddSib->TabIndex = 4;
+			this->AddSib->Text = L"Add Sibling";
+			this->AddSib->UseVisualStyleBackColor = true;
+			this->AddSib->Click += gcnew System::EventHandler(this, &Form1::AddSib_Click);
 			// 
 			// CritWeightTextBox
 			// 
@@ -211,6 +237,14 @@ namespace applesoranges {
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"Score Choice on Criterion";
 			// 
+			// ScoreTextBox
+			// 
+			this->ScoreTextBox->Location = System::Drawing::Point(355, 29);
+			this->ScoreTextBox->Name = L"ScoreTextBox";
+			this->ScoreTextBox->Size = System::Drawing::Size(100, 20);
+			this->ScoreTextBox->TabIndex = 2;
+			this->ScoreTextBox->TextChanged += gcnew System::EventHandler(this, &Form1::ScoreTextBox_TextChanged);
+			// 
 			// ScoreChoiceOnCriterion
 			// 
 			this->ScoreChoiceOnCriterion->AutoSize = true;
@@ -247,14 +281,6 @@ namespace applesoranges {
 			// 
 			this->openFileDialog1->FileName = L"openFileDialog1";
 			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &Form1::openFileDialog1_FileOk);
-			// 
-			// ScoreTextBox
-			// 
-			this->ScoreTextBox->Location = System::Drawing::Point(355, 29);
-			this->ScoreTextBox->Name = L"ScoreTextBox";
-			this->ScoreTextBox->Size = System::Drawing::Size(100, 20);
-			this->ScoreTextBox->TabIndex = 2;
-			this->ScoreTextBox->TextChanged += gcnew System::EventHandler(this, &Form1::ScoreTextBox_TextChanged);
 			// 
 			// Form1
 			// 
@@ -344,6 +370,14 @@ private: System::Void ScoreTextBox_TextChanged(System::Object^  sender, System::
 					dcd::theModel.theChoice.getSelected(),
 					*dcd::theModel.critTree.getSelectedCriterion(),
 					(float)Convert::ToDouble(ScoreTextBox->Text) ) );
+		 }
+		 /** Add sibling to current criterion */
+private: System::Void AddSib_Click(System::Object^  sender, System::EventArgs^  e) {
+			 dcd::theModel.critTree.AddASibling();
+		 }
+		  /** Add child to current criterion */
+private: System::Void AddChild_Click(System::Object^  sender, System::EventArgs^  e) {
+			 dcd::theModel.critTree.AddAChild();
 		 }
 };
 }

@@ -29,7 +29,7 @@ void cAODB::OpenProjectFile(
 	}
 
 	CritTreeView->Nodes->Clear();
-	System::Windows::Forms::TreeNode^ root = gcnew System::Windows::Forms::TreeNode("criteria");
+	dcd::cCritTreeNode^ root = gcnew dcd::cCritTreeNode( new dcd::cCriterion(L"criteria") );
 	CritTreeView->Nodes->Add( root );
 	LoadTree( 0, root, vcrit );
 

@@ -76,14 +76,13 @@ void cCriteriaTree::Clear()
 
 void cCriteriaTree::AddAChild()
 {
-	//mySelectedCriterium = AppendItem(mySelectedCriterium,"child");
-	//SetItemData( mySelectedCriterium, new dcd::cCriterion() );
-	//EnsureVisible( mySelectedCriterium );
+	dcd::cCritTreeNode^ newItem = gcnew dcd::cCritTreeNode( new dcd::cCriterion(L"child") );
+	theModel.myCritTreeView->SelectedNode->Nodes->Add(newItem);
 }
 void cCriteriaTree::AddASibling()
 {
-	//mySelectedCriterium = AppendItem(GetItemParent(mySelectedCriterium),"sibling");
-	//SetItemData( mySelectedCriterium, new dcd::cCriterion() );
+	dcd::cCritTreeNode^ newItem = gcnew dcd::cCritTreeNode( new dcd::cCriterion(L"sib") );
+	theModel.myCritTreeView->SelectedNode->Parent->Nodes->Add(newItem);
 }
 void cCriteriaTree::DeleteSelected()
 {

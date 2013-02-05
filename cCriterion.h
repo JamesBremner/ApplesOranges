@@ -13,6 +13,13 @@ namespace dcd {
 		{
 			myID = ++myLastID;
 		}
+		cCriterion( const std::wstring& name )
+			: myScoreStyle( numerical )
+			, myWeight( L"1" )
+			, myName( name )
+		{
+			myID = ++myLastID;
+		}
 		cCriterion( int id,
 			const std::wstring& name,
 			const std::wstring& weight,

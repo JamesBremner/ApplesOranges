@@ -207,6 +207,7 @@ namespace applesoranges {
 			this->CritNameTextBox->Name = L"CritNameTextBox";
 			this->CritNameTextBox->Size = System::Drawing::Size(100, 20);
 			this->CritNameTextBox->TabIndex = 2;
+			this->CritNameTextBox->TextChanged += gcnew System::EventHandler(this, &Form1::CritNameTextBox_TextChanged);
 			// 
 			// label2
 			// 
@@ -378,6 +379,12 @@ private: System::Void AddSib_Click(System::Object^  sender, System::EventArgs^  
 		  /** Add child to current criterion */
 private: System::Void AddChild_Click(System::Object^  sender, System::EventArgs^  e) {
 			 dcd::theModel.critTree.AddAChild();
+		 }
+		 /** User editing criterion name */
+private: System::Void CritNameTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+			 msclr::interop::marshal_context ^ context = gcnew msclr::interop::marshal_context();
+			dcd::theModel.critTree.getSelectedCriterion()->setName(  context->marshal_as<const wchar_t *>(CritNameTextBox->Text) );
+			CritTreeView->SelectedNode->Text = CritNameTextBox->Text;
 		 }
 };
 }

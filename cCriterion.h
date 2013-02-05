@@ -44,6 +44,7 @@ namespace dcd {
 		void setWeight( const std::wstring& weight )	{ myWeight = weight; }
 		const std::wstring& getWeight() const		{ return myWeight; }
 		const std::wstring& getName() const			{ return myName; }
+		void setName( const wchar_t * n )			{ myName = n; }
 		void setScoreStyle( score_style style )	{ myScoreStyle = style; }
 		score_style getScoreStyle() const		{ return myScoreStyle; }
 		void ZeroScore();
@@ -55,6 +56,9 @@ namespace dcd {
 		std::wstring myWeight;
 		std::wstring myName;
 	};
+
+
+
 	ref class cCritTreeNode : public System::Windows::Forms::TreeNode
 	{
 		cCriterion * myCrit;

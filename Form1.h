@@ -68,6 +68,8 @@ namespace applesoranges {
 	private: System::Windows::Forms::TextBox^  ScoreTextBox;
 	private: System::Windows::Forms::Button^  AddChild;
 	private: System::Windows::Forms::Button^  AddSib;
+	private: System::Windows::Forms::ToolStripMenuItem^  saveToolStripMenuItem;
+	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
 
 
 	protected: 
@@ -105,7 +107,9 @@ namespace applesoranges {
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->groupBox2->SuspendLayout();
 			this->groupBox3->SuspendLayout();
 			this->groupBox4->SuspendLayout();
@@ -267,7 +271,8 @@ namespace applesoranges {
 			// 
 			// fileToolStripMenuItem
 			// 
-			this->fileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->openToolStripMenuItem});
+			this->fileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->openToolStripMenuItem, 
+				this->saveToolStripMenuItem});
 			this->fileToolStripMenuItem->Name = L"fileToolStripMenuItem";
 			this->fileToolStripMenuItem->Size = System::Drawing::Size(35, 20);
 			this->fileToolStripMenuItem->Text = L"File";
@@ -275,14 +280,25 @@ namespace applesoranges {
 			// openToolStripMenuItem
 			// 
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(100, 22);
+			this->openToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->openToolStripMenuItem->Text = L"Open";
 			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::openToolStripMenuItem_Click);
+			// 
+			// saveToolStripMenuItem
+			// 
+			this->saveToolStripMenuItem->Name = L"saveToolStripMenuItem";
+			this->saveToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->saveToolStripMenuItem->Text = L"Save";
+			this->saveToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::saveToolStripMenuItem_Click);
 			// 
 			// openFileDialog1
 			// 
 			this->openFileDialog1->FileName = L"openFileDialog1";
 			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &Form1::openFileDialog1_FileOk);
+			// 
+			// saveFileDialog1
+			// 
+			this->saveFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &Form1::saveFileDialog1_FileOk);
 			// 
 			// Form1
 			// 
@@ -400,6 +416,16 @@ private: System::Void CritNameTextBox_TextChanged(System::Object^  sender, Syste
 			 msclr::interop::marshal_context ^ context = gcnew msclr::interop::marshal_context();
 			dcd::theModel.critTree.getSelectedCriterion()->setName(  context->marshal_as<const wchar_t *>(CritNameTextBox->Text) );
 			CritTreeView->SelectedNode->Text = CritNameTextBox->Text;
+		 }
+		 /** Save model */
+private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			saveFileDialog1->ShowDialog();
+		 }
+private: System::Void saveFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
+			 cAODB db;
+			 std::wstring path =  msclr::interop::marshal_as<std::wstring>(saveFileDialog1->FileName);
+			 db.SaveProjectFile( path, CritTreeView );
+
 		 }
 };
 }

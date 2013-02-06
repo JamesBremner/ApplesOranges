@@ -39,7 +39,39 @@ void cAODB::OpenProjectFile(
 	dcd::theModel.ReCalculate( CritTreeView );
 
 }
+void cAODB::SaveProjectFile( std::wstring path,
+		System::Windows::Forms::TreeView^  CritTreeView )
+{
+	Open( path.c_str() );
+	Clear();
+	SaveChoices();
+}
+/**
 
+  Initialize project database
+
+*/
+void cAODB::Clear()
+{
+	Query(L"DROP TABLE IF EXISTS choice;");
+	Query(L"DROP TABLE IF EXISTS criterium;");
+	Query(L"DROP TABLE IF EXISTS tree;");
+	Query(L"DROP TABLE IF EXISTS score;");
+	Query(L"CREATE TABLE choice ( id INTEGER PRIMARY KEY, name );");
+	Query(L"CREATE TABLE criterium ( id INTEGER PRIMARY KEY, "
+		L"name, weight, score_style );");
+	Query(L"CREATE TABLE tree ( parent, child );");
+	Query(L"CREATE TABLE score ( choice, criterium, score );");
+}
+
+void cAODB::SaveChoices()
+{
+	foreach( dcd::cChoice& choice, dcd::theModel.theChoice ) {
+		Query(L"INSERT INTO choice VALUES ( %d, '%s' );",
+			choice.getID(),
+			(const wchar_t *)choice.myName.c_str() );
+	}
+}
 void cAODB::LoadTree( 
 		int parent_id,
 		System::Windows::Forms::TreeNode^ node,

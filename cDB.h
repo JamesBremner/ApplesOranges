@@ -8,8 +8,12 @@ public:
 	~cAODB(void);
 	void OpenProjectFile( std::wstring path,
 		System::Windows::Forms::TreeView^  CritTreeView );
+	void SaveProjectFile( std::wstring path,
+		System::Windows::Forms::TreeView^  CritTreeView );
 	void LoadTree( 
 		int parent_id,
 		System::Windows::Forms::TreeNode^ node,
 		std::vector< dcd::cCriterion* > vcrit );
+	void Clear();
+	void SaveChoices();
 };

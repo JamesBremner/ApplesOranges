@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cDB.h"
+#include "AddChoice.h"
 
 namespace applesoranges {
 
@@ -26,10 +27,8 @@ namespace applesoranges {
 		Form1(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
 			dcd::theModel.critTree.myView = CritTreeView;
+			dcd::theModel.critTree.Clear();
 		}
 
 	protected:
@@ -70,6 +69,7 @@ namespace applesoranges {
 	private: System::Windows::Forms::Button^  AddSib;
 	private: System::Windows::Forms::ToolStripMenuItem^  saveToolStripMenuItem;
 	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
+	private: System::Windows::Forms::Button^  AddChoice;
 
 
 	protected: 
@@ -110,6 +110,8 @@ namespace applesoranges {
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->AddChoice = (gcnew System::Windows::Forms::Button());
+			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			this->groupBox3->SuspendLayout();
 			this->groupBox4->SuspendLayout();
@@ -121,7 +123,7 @@ namespace applesoranges {
 			this->listChoices->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(2) {this->Choice, this->TotalScore});
 			this->listChoices->Location = System::Drawing::Point(19, 52);
 			this->listChoices->Name = L"listChoices";
-			this->listChoices->Size = System::Drawing::Size(300, 419);
+			this->listChoices->Size = System::Drawing::Size(300, 395);
 			this->listChoices->TabIndex = 0;
 			this->listChoices->UseCompatibleStateImageBehavior = false;
 			this->listChoices->View = System::Windows::Forms::View::Details;
@@ -139,6 +141,7 @@ namespace applesoranges {
 			// 
 			// groupBox1
 			// 
+			this->groupBox1->Controls->Add(this->AddChoice);
 			this->groupBox1->Location = System::Drawing::Point(12, 26);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(326, 472);
@@ -280,14 +283,14 @@ namespace applesoranges {
 			// openToolStripMenuItem
 			// 
 			this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
-			this->openToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->openToolStripMenuItem->Size = System::Drawing::Size(100, 22);
 			this->openToolStripMenuItem->Text = L"Open";
 			this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::openToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this->saveToolStripMenuItem->Name = L"saveToolStripMenuItem";
-			this->saveToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->saveToolStripMenuItem->Size = System::Drawing::Size(100, 22);
 			this->saveToolStripMenuItem->Text = L"Save";
 			this->saveToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::saveToolStripMenuItem_Click);
 			// 
@@ -299,6 +302,16 @@ namespace applesoranges {
 			// saveFileDialog1
 			// 
 			this->saveFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &Form1::saveFileDialog1_FileOk);
+			// 
+			// AddChoice
+			// 
+			this->AddChoice->Location = System::Drawing::Point(36, 437);
+			this->AddChoice->Name = L"AddChoice";
+			this->AddChoice->Size = System::Drawing::Size(75, 23);
+			this->AddChoice->TabIndex = 0;
+			this->AddChoice->Text = L"Add";
+			this->AddChoice->UseVisualStyleBackColor = true;
+			this->AddChoice->Click += gcnew System::EventHandler(this, &Form1::AddChoice_Click);
 			// 
 			// Form1
 			// 
@@ -314,6 +327,7 @@ namespace applesoranges {
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"Form1";
 			this->Text = L"Apples or Oranges";
+			this->groupBox1->ResumeLayout(false);
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox3->PerformLayout();
@@ -414,8 +428,8 @@ private: System::Void AddChild_Click(System::Object^  sender, System::EventArgs^
 		 /** User editing criterion name */
 private: System::Void CritNameTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 			 msclr::interop::marshal_context ^ context = gcnew msclr::interop::marshal_context();
-			dcd::theModel.critTree.getSelectedCriterion()->setName(  context->marshal_as<const wchar_t *>(CritNameTextBox->Text) );
-			CritTreeView->SelectedNode->Text = CritNameTextBox->Text;
+			 dcd::theModel.critTree.getSelectedCriterion()->setName(  context->marshal_as<const wchar_t *>(CritNameTextBox->Text) );
+			 CritTreeView->SelectedNode->Text = CritNameTextBox->Text;
 		 }
 		 /** Save model */
 private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -426,6 +440,13 @@ private: System::Void saveFileDialog1_FileOk(System::Object^  sender, System::Co
 			 std::wstring path =  msclr::interop::marshal_as<std::wstring>(saveFileDialog1->FileName);
 			 db.SaveProjectFile( path, CritTreeView );
 
+		 }
+private: System::Void AddChoice_Click(System::Object^  sender, System::EventArgs^  e) {
+			 AddChoiceDlg^ dlg = gcnew AddChoiceDlg();
+			 dlg->ShowDialog();
+			 msclr::interop::marshal_context ^ context = gcnew msclr::interop::marshal_context();
+			 dcd::theModel.theChoice.Add( dcd::cChoice( context->marshal_as<const wchar_t *>(dlg->textBox1->Text) ) );
+			 FillChoices();
 		 }
 };
 }

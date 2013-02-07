@@ -10,8 +10,7 @@ cAODB::~cAODB(void)
 {
 }
 void cAODB::OpenProjectFile( 
-			std::wstring path,
-			System::Windows::Forms::TreeView^  CritTreeView ) 
+			std::wstring path ) 
 {
 	Open( path.c_str() );
 
@@ -36,10 +35,106 @@ void cAODB::OpenProjectFile(
 
 	LoadTree( 0, dcd::theModel.critTree.getRoot(), vcrit );
 
-	dcd::theModel.ReCalculate( CritTreeView );
+
 
 }
+void cAODB::SaveProjectFile( std::wstring path )
+{
+	Open( path.c_str() );
+	Clear();
+	SaveChoices();
+	SaveCriteria( dcd::theModel.critTree.getRoot(), 0 );
+}
+/**
 
+  Initialize project database
+
+*/
+void cAODB::Clear()
+{
+	Query(L"DROP TABLE IF EXISTS choice;");
+	Query(L"DROP TABLE IF EXISTS criterium;");
+	Query(L"DROP TABLE IF EXISTS tree;");
+	Query(L"DROP TABLE IF EXISTS score;");
+	Query(L"CREATE TABLE choice ( id INTEGER PRIMARY KEY, name );");
+	Query(L"CREATE TABLE criterium ( id INTEGER PRIMARY KEY, "
+		L"name, weight, score_style );");
+	Query(L"CREATE TABLE tree ( parent, child );");
+	Query(L"CREATE TABLE score ( choice, criterium, score );");
+}
+
+void cAODB::SaveChoices()
+{
+	foreach( dcd::cChoice& choice, dcd::theModel.theChoice ) {
+		Query(L"INSERT INTO choice VALUES ( %d, '%s' );",
+			choice.getID(),
+			(const wchar_t *)choice.myName.c_str() );
+	}
+}
+/**
+
+  Save criteria tree to database
+
+  @param[in] parent        parent node of subtree to be saved
+  @param[in] parent_rowid  DB row where parent nore was saved, should be 0 for first call
+
+*/
+void cAODB::SaveCriteria( 
+						 dcd::cCritTreeNode^ parent,
+						 int parent_rowid )
+{
+	// loop over all children
+	for(
+		dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)parent->FirstNode;
+		child != nullptr;
+		child =  (dcd::cCritTreeNode^)child->NextNode )
+	{
+		dcd::cCriterion * crit = child->getCrit();
+
+		Query(L"INSERT INTO criterium VALUES ( %d, '%s', '%s', %d );",
+			crit->getID(),
+			(const wchar_t *)crit->getName().c_str(),
+			(const wchar_t *)crit->getWeight().c_str(),
+			(int)crit->getScoreStyle() );
+		Query(L"INSERT INTO tree VALUES ( %d, %d );",
+			parent_rowid, crit->getID() );
+
+		// check if this node has children
+		if( child->Nodes->Count ) {
+
+			// save subtree
+			SaveCriteria( child, crit->getID() );
+
+		} else {
+
+			// no children
+
+			SaveScore( *crit );
+		}
+
+	} 
+
+
+}
+/**
+
+  Save criterion scores for all choices
+
+  @param[in] crit the criterion for which the scores are to be saved
+
+*/
+void cAODB::SaveScore( const dcd::cCriterion& crit )
+{
+	Query(L"BEGIN TRANSACTION;");
+	foreach( dcd::cChoice& choice, dcd::theModel.theChoice ) {
+		Query(L"INSERT INTO score VALUES ( %d, %d, '%f' );",
+			choice.getID(),
+			crit.getID(),
+			dcd::theModel.theScore.getScore( choice, crit ) );
+	}
+	Query(L"END TRANSACTION;");
+
+}
 void cAODB::LoadTree( 
 		int parent_id,
 		System::Windows::Forms::TreeNode^ node,

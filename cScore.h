@@ -68,6 +68,7 @@ namespace dcd {
 	public:
 		typedef std::set<cScore>::iterator iter;
 		void clear() { myScore.clear(); }
+		int size()  { return (int) myScore.size(); }
 		void Add( const cScore& score ) { myScore.insert( score ); }
 		void Set( const cScore& target ) {
 			iter found = Find( target );

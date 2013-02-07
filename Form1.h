@@ -344,7 +344,7 @@ namespace applesoranges {
 			 }
 	private: System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 
-	    openFileDialog1->ShowDialog();
+				 openFileDialog1->ShowDialog();
 
 			 } 
 private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
@@ -352,8 +352,11 @@ private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::Co
 			 // read project file
 			 cAODB db;
 			 std::wstring path =  msclr::interop::marshal_as<std::wstring>(openFileDialog1->FileName);
-			 db.OpenProjectFile( path, CritTreeView );
-			
+			 db.OpenProjectFile( path );
+
+			 // Recalculate total scores
+			 dcd::theModel.ReCalculate( CritTreeView );
+
 			 // display model
 			 FillChoices();
 
@@ -438,7 +441,7 @@ private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, Syste
 private: System::Void saveFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
 			 cAODB db;
 			 std::wstring path =  msclr::interop::marshal_as<std::wstring>(saveFileDialog1->FileName);
-			 db.SaveProjectFile( path, CritTreeView );
+			 db.SaveProjectFile( path );
 
 		 }
 private: System::Void AddChoice_Click(System::Object^  sender, System::EventArgs^  e) {

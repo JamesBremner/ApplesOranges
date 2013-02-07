@@ -14,6 +14,10 @@ namespace dcd {
 		// zero the total score
 		root->getCrit()->ZeroScore();
 
+		//check that we have some scores to calculate
+		if( ! theScore.size() )
+			return;
+
 		dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)root->FirstNode;
 
 		while( child != nullptr ) {

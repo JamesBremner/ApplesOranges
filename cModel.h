@@ -30,8 +30,10 @@ cCriteriaTree		 critTree;
 
 cScoreSet theScore;
 
-void ReCalculate( /*System::Windows::Forms::TreeView^  CritTreeView*/ );
+void ReCalculate();
 void Calculate( dcd::cCritTreeNode^ parent );
+
+dcd::cCriterion & getRootCrterion()		{ return *critTree.getRoot()->getCrit(); }
 
 
 

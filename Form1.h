@@ -404,7 +404,7 @@ public:
 		dcd::cCriterion * select_crit = dcd::theModel.critTree.getSelectedCriterion();
 		foreach( dcd::cChoice& choice, dcd::theModel.theChoice ) {
 			ListViewItem^ item = gcnew ListViewItem( gcnew System::String( choice.myName.c_str()), 0 );
-			item->SubItems->Add(dcd::theModel.theScore.getScore( choice, *root_crit).ToString());
+			item->SubItems->Add( String::Format("{0,3:F3}", dcd::theModel.theScore.getScore( choice, *root_crit)));
 			item->SubItems->Add(dcd::theModel.theScore.getScore( choice, *select_crit).ToString());
 			listChoices->Items->Add( item );
 		}
@@ -427,6 +427,7 @@ private: System::Void CritTreeView_AfterSelect(System::Object^  sender, System::
 			 CritNameTextBox->Text = msclr::interop::marshal_as<System::String ^>(crit->getName());
 			 CritWeightTextBox->Text = msclr::interop::marshal_as<System::String ^>(crit->getWeight());
 			 FillSelectedChoice();
+			 FillChoices();
 		 }
 
 private: System::Void listChoices_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {

@@ -5,13 +5,11 @@ namespace dcd {
 
 	/** Recalculate total score
 	*/
-	void cModel::ReCalculate( /*System::Windows::Forms::TreeView^  CritTreeView*/ )
+	void cModel::ReCalculate()
 	{
 		System::Diagnostics::Debug::WriteLine("->cModel::ReCalculate");
 		theChoice.DumpOutput();
 		theScore.DumpOutput();
-
-		//critTree.myView = CritTreeView;
 
 		dcd::cCritTreeNode^ root = critTree.getRoot();
 
@@ -24,18 +22,22 @@ namespace dcd {
 		if( ! theChoice.size() )
 			return;
 
-		dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)root->FirstNode;
-
-		while( child != nullptr ) {
+		//loop over children of root node
+		for( 
+			dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)root->FirstNode;
+			child != nullptr;
+			child = (dcd::cCritTreeNode^)root->NextNode )
+		{
 
 			Calculate( child );
 
-			child = (dcd::cCritTreeNode^)root->NextNode;
-
 		}
 
-		System::Diagnostics::Debug::WriteLine( gcnew System::String( theModel.theScore.DumpText().c_str() ) );
+		theScore.DumpOutput();
 		System::Diagnostics::Debug::WriteLine("<-cModel::ReCalculate");
+
+		// sort the choices by their new total scores
+		theChoice.SortByTotalScore();
 
 
 	}

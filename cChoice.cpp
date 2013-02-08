@@ -61,6 +61,18 @@ namespace dcd {
 		}
 		return *(myChoice.begin()+mySelected);
 	}
+	namespace  ChoiceVector {
+	static bool  FirstChoiceTotalScoreGreater(  const cChoice& first, const cChoice& second )
+	{
+		return dcd::theModel.theScore.getScore( first, dcd::theModel.getRootCrterion() ) >
+			dcd::theModel.theScore.getScore( second, dcd::theModel.getRootCrterion() ); 
+	}
+	}
+	void cChoiceVector::SortByTotalScore()
+	{
+		std::sort(myChoice.begin(),myChoice.end(),
+			ChoiceVector::FirstChoiceTotalScoreGreater);
+	}
 	void cChoiceVector::DumpOutput()
 	{
 		foreach( cChoice& choice, myChoice ) {

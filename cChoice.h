@@ -29,6 +29,7 @@ public:
 	void setSelected( int i );			
 	cChoice& getSelected();
 	bool IsSelected()					{ return (  0 <= mySelected || mySelected < (int)myChoice.size() ); }
+	void SortByTotalScore();
 	void DumpOutput();
 private:
 	std::vector< cChoice > myChoice;

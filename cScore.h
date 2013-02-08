@@ -73,8 +73,6 @@ namespace dcd {
 		int size()  { return (int) myScore.size(); }
 		void Add( const cScore& score ) 
 		{ 
-			int dbg = 0;
-			dbg++;
 			myScore.insert( score );
 		}
 		void Set( const cScore& target ) {

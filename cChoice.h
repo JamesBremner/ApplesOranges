@@ -23,7 +23,7 @@ public:
 	int size()							{ return (int) myChoice.size(); }
 	void erase( iterator i )			{ myChoice.erase( i ); }
 	void clear()						{ myChoice.clear(); }
-	void Add( const cChoice& choice )	{ myChoice.push_back( choice ); }
+	void Add( const cChoice& choice )	{ myChoice.push_back( choice ); mySelected = myChoice.size()-1; }
 	cChoice& operator[]( int idx )		{ return *(myChoice.begin()+idx); }
 	void setTable( const std::vector< std::wstring >& table );
 	void setSelected( int i );			

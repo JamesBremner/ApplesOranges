@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cDB.h"
-#include "AddChoice.h"
+
 
 namespace applesoranges {
 
@@ -73,6 +73,10 @@ namespace applesoranges {
 	private: System::Windows::Forms::Button^  AddChoice;
 
 	private: bool filling;
+	private: System::Windows::Forms::ColumnHeader^  CritScoreHeader;
+	private: System::Windows::Forms::TextBox^  ChoiceNameTextBox;
+
+	private: System::Windows::Forms::Label^  ChoiceName;
 
 
 	protected: 
@@ -94,6 +98,7 @@ namespace applesoranges {
 			this->listChoices = (gcnew System::Windows::Forms::ListView());
 			this->Choice = (gcnew System::Windows::Forms::ColumnHeader());
 			this->TotalScore = (gcnew System::Windows::Forms::ColumnHeader());
+			this->CritScoreHeader = (gcnew System::Windows::Forms::ColumnHeader());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->AddChoice = (gcnew System::Windows::Forms::Button());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
@@ -106,6 +111,8 @@ namespace applesoranges {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->ChoiceNameTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->ChoiceName = (gcnew System::Windows::Forms::Label());
 			this->ScoreTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->ScoreChoiceOnCriterion = (gcnew System::Windows::Forms::Label());
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
@@ -114,7 +121,6 @@ namespace applesoranges {
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
-			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			this->groupBox3->SuspendLayout();
 			this->groupBox4->SuspendLayout();
@@ -123,10 +129,11 @@ namespace applesoranges {
 			// 
 			// listChoices
 			// 
-			this->listChoices->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(2) {this->Choice, this->TotalScore});
+			this->listChoices->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(3) {this->Choice, this->TotalScore, 
+				this->CritScoreHeader});
 			this->listChoices->Location = System::Drawing::Point(19, 52);
 			this->listChoices->Name = L"listChoices";
-			this->listChoices->Size = System::Drawing::Size(300, 395);
+			this->listChoices->Size = System::Drawing::Size(386, 395);
 			this->listChoices->TabIndex = 0;
 			this->listChoices->UseCompatibleStateImageBehavior = false;
 			this->listChoices->View = System::Windows::Forms::View::Details;
@@ -142,41 +149,45 @@ namespace applesoranges {
 			this->TotalScore->Text = L"Total Score";
 			this->TotalScore->Width = 85;
 			// 
+			// CritScoreHeader
+			// 
+			this->CritScoreHeader->Text = L"Crit Score";
+			this->CritScoreHeader->Width = 85;
+			// 
 			// groupBox1
 			// 
-			this->groupBox1->Controls->Add(this->AddChoice);
 			this->groupBox1->Location = System::Drawing::Point(12, 26);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(326, 472);
+			this->groupBox1->Size = System::Drawing::Size(408, 428);
 			this->groupBox1->TabIndex = 1;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Choices";
 			// 
 			// AddChoice
 			// 
-			this->AddChoice->Location = System::Drawing::Point(36, 437);
+			this->AddChoice->Location = System::Drawing::Point(28, 101);
 			this->AddChoice->Name = L"AddChoice";
 			this->AddChoice->Size = System::Drawing::Size(75, 23);
 			this->AddChoice->TabIndex = 0;
-			this->AddChoice->Text = L"Add";
+			this->AddChoice->Text = L"Add Choice";
 			this->AddChoice->UseVisualStyleBackColor = true;
 			this->AddChoice->Click += gcnew System::EventHandler(this, &Form1::AddChoice_Click);
 			// 
 			// groupBox2
 			// 
 			this->groupBox2->Controls->Add(this->CritTreeView);
-			this->groupBox2->Location = System::Drawing::Point(360, 26);
+			this->groupBox2->Location = System::Drawing::Point(426, 27);
 			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(300, 472);
+			this->groupBox2->Size = System::Drawing::Size(317, 427);
 			this->groupBox2->TabIndex = 2;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Criteria";
 			// 
 			// CritTreeView
 			// 
-			this->CritTreeView->Location = System::Drawing::Point(7, 26);
+			this->CritTreeView->Location = System::Drawing::Point(17, 25);
 			this->CritTreeView->Name = L"CritTreeView";
-			this->CritTreeView->Size = System::Drawing::Size(287, 419);
+			this->CritTreeView->Size = System::Drawing::Size(287, 394);
 			this->CritTreeView->TabIndex = 0;
 			this->CritTreeView->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &Form1::CritTreeView_AfterSelect);
 			// 
@@ -188,9 +199,9 @@ namespace applesoranges {
 			this->groupBox3->Controls->Add(this->CritNameTextBox);
 			this->groupBox3->Controls->Add(this->label2);
 			this->groupBox3->Controls->Add(this->label1);
-			this->groupBox3->Location = System::Drawing::Point(667, 26);
+			this->groupBox3->Location = System::Drawing::Point(426, 462);
 			this->groupBox3->Name = L"groupBox3";
-			this->groupBox3->Size = System::Drawing::Size(211, 472);
+			this->groupBox3->Size = System::Drawing::Size(211, 130);
 			this->groupBox3->TabIndex = 3;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"Criterion";
@@ -251,18 +262,38 @@ namespace applesoranges {
 			// 
 			// groupBox4
 			// 
+			this->groupBox4->Controls->Add(this->ChoiceNameTextBox);
+			this->groupBox4->Controls->Add(this->ChoiceName);
+			this->groupBox4->Controls->Add(this->AddChoice);
 			this->groupBox4->Controls->Add(this->ScoreTextBox);
 			this->groupBox4->Controls->Add(this->ScoreChoiceOnCriterion);
-			this->groupBox4->Location = System::Drawing::Point(12, 518);
+			this->groupBox4->Location = System::Drawing::Point(12, 462);
 			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(648, 66);
+			this->groupBox4->Size = System::Drawing::Size(303, 130);
 			this->groupBox4->TabIndex = 4;
 			this->groupBox4->TabStop = false;
-			this->groupBox4->Text = L"Score Choice on Criterion";
+			this->groupBox4->Text = L"Choice";
+			// 
+			// ChoiceNameTextBox
+			// 
+			this->ChoiceNameTextBox->Location = System::Drawing::Point(180, 20);
+			this->ChoiceNameTextBox->Name = L"ChoiceNameTextBox";
+			this->ChoiceNameTextBox->Size = System::Drawing::Size(100, 20);
+			this->ChoiceNameTextBox->TabIndex = 4;
+			this->ChoiceNameTextBox->TextChanged += gcnew System::EventHandler(this, &Form1::ChoiceNameTextBox_TextChanged);
+			// 
+			// ChoiceName
+			// 
+			this->ChoiceName->AutoSize = true;
+			this->ChoiceName->Location = System::Drawing::Point(106, 27);
+			this->ChoiceName->Name = L"ChoiceName";
+			this->ChoiceName->Size = System::Drawing::Size(35, 13);
+			this->ChoiceName->TabIndex = 3;
+			this->ChoiceName->Text = L"Name";
 			// 
 			// ScoreTextBox
 			// 
-			this->ScoreTextBox->Location = System::Drawing::Point(355, 29);
+			this->ScoreTextBox->Location = System::Drawing::Point(180, 66);
 			this->ScoreTextBox->Name = L"ScoreTextBox";
 			this->ScoreTextBox->Size = System::Drawing::Size(100, 20);
 			this->ScoreTextBox->TabIndex = 2;
@@ -271,7 +302,7 @@ namespace applesoranges {
 			// ScoreChoiceOnCriterion
 			// 
 			this->ScoreChoiceOnCriterion->AutoSize = true;
-			this->ScoreChoiceOnCriterion->Location = System::Drawing::Point(7, 29);
+			this->ScoreChoiceOnCriterion->Location = System::Drawing::Point(6, 69);
 			this->ScoreChoiceOnCriterion->Name = L"ScoreChoiceOnCriterion";
 			this->ScoreChoiceOnCriterion->Size = System::Drawing::Size(135, 13);
 			this->ScoreChoiceOnCriterion->TabIndex = 1;
@@ -282,7 +313,7 @@ namespace applesoranges {
 			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->fileToolStripMenuItem});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(879, 24);
+			this->menuStrip1->Size = System::Drawing::Size(759, 24);
 			this->menuStrip1->TabIndex = 5;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -321,7 +352,7 @@ namespace applesoranges {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(879, 596);
+			this->ClientSize = System::Drawing::Size(759, 596);
 			this->Controls->Add(this->groupBox4);
 			this->Controls->Add(this->groupBox3);
 			this->Controls->Add(this->groupBox2);
@@ -331,7 +362,6 @@ namespace applesoranges {
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"Form1";
 			this->Text = L"Apples or Oranges";
-			this->groupBox1->ResumeLayout(false);
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox3->PerformLayout();
@@ -370,19 +400,21 @@ public:
 	void FillChoices(void)
 	{
 		listChoices->Items->Clear();
+		dcd::cCriterion * root_crit = dcd::theModel.critTree.getRoot()->getCrit();
+		dcd::cCriterion * select_crit = dcd::theModel.critTree.getSelectedCriterion();
 		foreach( dcd::cChoice& choice, dcd::theModel.theChoice ) {
-			ListViewItem^ item = gcnew ListViewItem( msclr::interop::marshal_as<System::String ^>(choice.myName.c_str()), 0 );
-			item->SubItems->Add(dcd::theModel.theScore.getScore(choice,*dcd::theModel.critTree.getRoot()->getCrit()).ToString());
+			ListViewItem^ item = gcnew ListViewItem( gcnew System::String( choice.myName.c_str()), 0 );
+			item->SubItems->Add(dcd::theModel.theScore.getScore( choice, *root_crit).ToString());
+			item->SubItems->Add(dcd::theModel.theScore.getScore( choice, *select_crit).ToString());
 			listChoices->Items->Add( item );
 		}
 	}
-	void FillScoreChoiceOnCriterion()
+	void FillSelectedChoice()
 	{
 		filling = true;
-		ScoreChoiceOnCriterion->Text = "Score choice " + 
-			msclr::interop::marshal_as<System::String ^>(dcd::theModel.theChoice.getSelected().myName) +
-			" on criterion " +
-			msclr::interop::marshal_as<System::String ^>(dcd::theModel.critTree.getSelectedCriterion()->getName());
+		ChoiceNameTextBox->Text = gcnew System::String(dcd::theModel.theChoice.getSelected().myName.c_str());
+		ScoreChoiceOnCriterion->Text = "Score choice on criterion " +
+			gcnew System::String(dcd::theModel.critTree.getSelectedCriterion()->getName().c_str());
 		ScoreTextBox->Text = dcd::theModel.theScore.getScore(
 			dcd::theModel.theChoice.getSelected(),
 			*dcd::theModel.critTree.getSelectedCriterion() ).ToString();
@@ -394,14 +426,14 @@ private: System::Void CritTreeView_AfterSelect(System::Object^  sender, System::
 			 dcd::theModel.critTree.setSelected( crit );
 			 CritNameTextBox->Text = msclr::interop::marshal_as<System::String ^>(crit->getName());
 			 CritWeightTextBox->Text = msclr::interop::marshal_as<System::String ^>(crit->getWeight());
-			 FillScoreChoiceOnCriterion();
+			 FillSelectedChoice();
 		 }
 
 private: System::Void listChoices_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 			 if( ! listChoices->SelectedItems->Count )
 				 return;
 			 dcd::theModel.theChoice.setSelected( listChoices->Items->IndexOf( listChoices->SelectedItems[0] ) );
-			 FillScoreChoiceOnCriterion();
+			 FillSelectedChoice();
 		 }
 		 /**
 
@@ -462,14 +494,17 @@ private: System::Void saveFileDialog1_FileOk(System::Object^  sender, System::Co
 			 db.SaveProjectFile( path );
 
 		 }
+		 /** User has asked for a new choice */
 private: System::Void AddChoice_Click(System::Object^  sender, System::EventArgs^  e) {
-			 AddChoiceDlg^ dlg = gcnew AddChoiceDlg();
-			 dlg->ShowDialog();
-			 msclr::interop::marshal_context ^ context = gcnew msclr::interop::marshal_context();
-			 dcd::theModel.theChoice.Add( dcd::cChoice( context->marshal_as<const wchar_t *>(dlg->textBox1->Text) ) );
+			 dcd::theModel.theChoice.Add( dcd::cChoice( L"Choice" ) );
 			 FillChoices();
 		 }
-
+		/** User change name of choice */
+private: System::Void ChoiceNameTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+			 dcd::theModel.theChoice.getSelected().myName = 
+				  msclr::interop::marshal_as<std::wstring>( ChoiceNameTextBox->Text );
+			  FillChoices();
+		 }
 };
 }
 

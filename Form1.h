@@ -377,9 +377,9 @@ namespace applesoranges {
 	private: System::Void groupBox1_Enter(System::Object^  sender, System::EventArgs^  e) {
 			 }
 	private: System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-
+				 openFileDialog1->Filter = "A&O files (*.ddb)|*.ddb|All files (*.*)|*.*";
+				 openFileDialog1->FilterIndex = 1;
 				 openFileDialog1->ShowDialog();
-
 			 } 
 private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
 
@@ -486,7 +486,9 @@ private: System::Void CritWeightTextBox_TextChanged(System::Object^  sender, Sys
 		 }
 		 /** Save model */
 private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			saveFileDialog1->ShowDialog();
+			 saveFileDialog1->Filter = "A&O files (*.ddb)|*.ddb|All files (*.*)|*.*";
+			 saveFileDialog1->FilterIndex = 1;
+			 saveFileDialog1->ShowDialog();
 		 }
 private: System::Void saveFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
 			 cAODB db;
@@ -498,14 +500,14 @@ private: System::Void saveFileDialog1_FileOk(System::Object^  sender, System::Co
 private: System::Void AddChoice_Click(System::Object^  sender, System::EventArgs^  e) {
 			 dcd::theModel.theChoice.Add( dcd::cChoice( L"Choice" ) );
 			 FillChoices();
+			 FillSelectedChoice();
 		 }
-		/** User change name of choice */
+		 /** User change name of choice */
 private: System::Void ChoiceNameTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 			 dcd::theModel.theChoice.getSelected().myName = 
-				  msclr::interop::marshal_as<std::wstring>( ChoiceNameTextBox->Text );
-			  FillChoices();
+				 msclr::interop::marshal_as<std::wstring>( ChoiceNameTextBox->Text );
+			 FillChoices();
 		 }
 };
 }
 
- 

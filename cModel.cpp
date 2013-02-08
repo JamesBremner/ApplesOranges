@@ -64,17 +64,13 @@ namespace dcd {
 		current->getCrit()->ZeroScore();
 
 		// loop over all children
-		dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)current->FirstNode;
-
-		while( child != nullptr ) {
-
-			Calculate( child );
-
-			child = (dcd::cCritTreeNode^)current->NextNode;
-
-		}
-
-
+		for(
+			dcd::cCritTreeNode^ child = current->getFirstChild();
+			child != nullptr;
+			child = child->getNextSibling() )
+			{
+				Calculate( child );
+			}
 
 	}
 }

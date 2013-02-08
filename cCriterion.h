@@ -68,7 +68,15 @@ namespace dcd {
 			, System::Windows::Forms::TreeNode( 
 			msclr::interop::marshal_as<System::String^>(pcrit->getName()) )
 		{}
-			cCriterion * getCrit()	{ return myCrit; }
+		cCriterion * getCrit()	{ return myCrit; }
+		cCritTreeNode^ getFirstChild()
+		{
+			return (cCritTreeNode^)FirstNode;
+		}
+		cCritTreeNode^ getNextSibling()
+		{
+			return (cCritTreeNode^)NextNode;
+		}
 	};
 
 

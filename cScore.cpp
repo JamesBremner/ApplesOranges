@@ -39,4 +39,27 @@ namespace dcd {
 				(float)_wtof(table[k*3+2].c_str())));
 		}
 	}
+	/**
+
+	Debug dump text
+
+	*/
+	std::wstring cScoreSet::DumpText()
+	{
+		std::wstring ret = L"(choice,crit,score): ";
+		foreach( cScore& score, myScore ) {
+			wchar_t buf[1000];
+			swprintf_s(buf,999,L"%d %d %f, ",
+				score.getChoice(),
+				score.getCriterion(),
+				score.getScore() );
+			ret += buf;
+		}
+		return ret;
+	}
+	void cScoreSet::DumpOutput()
+	{
+		System::Diagnostics::Debug::WriteLine( gcnew System::String( DumpText().c_str() ) );
+	}
+
 }

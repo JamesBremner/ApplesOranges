@@ -26,9 +26,10 @@ public:
 	void Add( const cChoice& choice )	{ myChoice.push_back( choice ); }
 	cChoice& operator[]( int idx )		{ return *(myChoice.begin()+idx); }
 	void setTable( const std::vector< std::wstring >& table );
-	void setSelected( int i )			{ mySelected = i; }
+	void setSelected( int i );			
 	cChoice& getSelected();
 	bool IsSelected()					{ return (  0 <= mySelected || mySelected < (int)myChoice.size() ); }
+	void DumpOutput();
 private:
 	std::vector< cChoice > myChoice;
 	int mySelected;

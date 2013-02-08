@@ -18,6 +18,8 @@ namespace dcd {
 			const cCriterion& crit,
 			const float score );
 		float getScore()				{ return myScore; }
+		int   getCriterion()			{ return myCriteriumID; }
+		int   getChoice()				{ return myChoiceID; }
 		void setScore( float score )	{ myScore = score; }
 
 		/**
@@ -69,7 +71,12 @@ namespace dcd {
 		typedef std::set<cScore>::iterator iter;
 		void clear() { myScore.clear(); }
 		int size()  { return (int) myScore.size(); }
-		void Add( const cScore& score ) { myScore.insert( score ); }
+		void Add( const cScore& score ) 
+		{ 
+			int dbg = 0;
+			dbg++;
+			myScore.insert( score );
+		}
 		void Set( const cScore& target ) {
 			iter found = Find( target );
 			if( found == myScore.end() ) {
@@ -108,6 +115,8 @@ namespace dcd {
 		}
 		void getScore( std::vector<float>& score, const cCriterion& crit );
 		void setTable(const std::vector< std::wstring >& table );
+		std::wstring DumpText();
+		void DumpOutput();
 
 	private:
 		//std::vector< cScore > myScore;

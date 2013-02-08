@@ -21,6 +21,9 @@ void cCriterion::ZeroScore()
 */
 void cCriterion::EvaluateScores( cCriterion * parent )
 {
+	System::Diagnostics::Debug::WriteLine( "cCriterion::EvaluateScores" );
+	theModel.theScore.DumpOutput();
+
 	// find range of scores
 	std::vector< float > value;
 	std::vector<float> crit_score;
@@ -28,7 +31,7 @@ void cCriterion::EvaluateScores( cCriterion * parent )
 	float max_score = crit_score[0];
 	float min_score = crit_score[0];
 	foreach( float score, crit_score ) {
-		if( score > max_score )
+		if( score > max_score ) 
 			max_score = score;
 		if( score < min_score )
 			min_score = score;
@@ -49,6 +52,8 @@ void cCriterion::EvaluateScores( cCriterion * parent )
 	{
 		theModel.theScore.AddScore( *choice++, *parent, weight * v );
 	}
+
+	theModel.theScore.DumpOutput();
 
 }
 
@@ -94,17 +99,30 @@ void cCriteriaTree::DeleteSelected()
 
   @param[in] current  The criterion in the tree whose scores must be propogated
 */
-void cCriteriaTree::PropogateScoreUpwards( dcd::cCritTreeNode^ current )
+void cCriteriaTree::PropogateScoreUpwards( dcd::cCritTreeNode^ node_current )
 {
-	dcd::cCriterion * crit_cur = current->getCrit();
-	while( current != myView->Nodes[0] ) {
-		dcd::cCriterion * crit_parent = ((dcd::cCritTreeNode^)current->Parent)->getCrit();
+	System::Diagnostics::Debug::WriteLine( "PropogateScoreUpwards" );
+	dcd::cCriterion * crit_cur = node_current->getCrit();
+	while( node_current != myView->Nodes[0] ) {
+		dcd::cCriterion * crit_parent = ((dcd::cCritTreeNode^)node_current->Parent)->getCrit();
 		float weight = (float)_wtof( crit_cur->getWeight().c_str());
 		foreach( dcd::cChoice& choice, theModel.theChoice ) {
+			float score = theModel.theScore.getScore( choice, *crit_cur );
+#ifdef _DEBUG
+			theModel.theScore.DumpOutput();
+			wchar_t msg[1000];
+			swprintf(msg,999,L"choice=%s,score=%f, weight=%f, current=%s, parent=%s ( %f )",
+				choice.myName.c_str(),
+				score, weight, crit_cur->getName().c_str(), crit_parent->getName().c_str(),
+				theModel.theScore.getScore( choice, *crit_parent ));
+			System::Diagnostics::Debug::WriteLine( gcnew System::String(msg) );
+#endif
 			theModel.theScore.AddScore( choice, *crit_parent,
-				weight * theModel.theScore.getScore( choice, *crit_cur ) );
+				weight * score );
+
+			theModel.theScore.DumpOutput();
 		}
-		current = (dcd::cCritTreeNode^)current->Parent;
+		node_current = (dcd::cCritTreeNode^)node_current->Parent;
 		crit_cur = crit_parent;
 	}
 

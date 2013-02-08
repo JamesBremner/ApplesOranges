@@ -46,6 +46,13 @@ namespace dcd {
 		}
 
 	}
+	void cChoiceVector::setSelected( int i )
+	{
+		if( i >= (int)myChoice.size() )
+			i = myChoice.size()-1;
+		mySelected = i;
+	}
+
 	cChoice& cChoiceVector::getSelected()
 	{
 		if( 0 > mySelected || mySelected >= (int)myChoice.size() ) {
@@ -54,5 +61,16 @@ namespace dcd {
 		}
 		return *(myChoice.begin()+mySelected);
 	}
+	void cChoiceVector::DumpOutput()
+	{
+		foreach( cChoice& choice, myChoice ) {
+			wchar_t buf[1000];
+			swprintf_s(buf,999,L"%d %s, ",
+				choice.getID(), choice.myName.c_str());
+			System::Diagnostics::Debug::Write( gcnew System::String( buf ) );
+		}
+		System::Diagnostics::Debug::Write( gcnew System::String( "\n" ) );
+	}
+
 
 }

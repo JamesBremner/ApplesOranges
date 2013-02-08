@@ -29,6 +29,7 @@ namespace applesoranges {
 			InitializeComponent();
 			dcd::theModel.critTree.myView = CritTreeView;
 			dcd::theModel.critTree.Clear();
+			filling = false;
 		}
 
 	protected:
@@ -71,6 +72,8 @@ namespace applesoranges {
 	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
 	private: System::Windows::Forms::Button^  AddChoice;
 
+	private: bool filling;
+
 
 	protected: 
 
@@ -92,6 +95,7 @@ namespace applesoranges {
 			this->Choice = (gcnew System::Windows::Forms::ColumnHeader());
 			this->TotalScore = (gcnew System::Windows::Forms::ColumnHeader());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->AddChoice = (gcnew System::Windows::Forms::Button());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->CritTreeView = (gcnew System::Windows::Forms::TreeView());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
@@ -110,7 +114,6 @@ namespace applesoranges {
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
-			this->AddChoice = (gcnew System::Windows::Forms::Button());
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			this->groupBox3->SuspendLayout();
@@ -148,6 +151,16 @@ namespace applesoranges {
 			this->groupBox1->TabIndex = 1;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Choices";
+			// 
+			// AddChoice
+			// 
+			this->AddChoice->Location = System::Drawing::Point(36, 437);
+			this->AddChoice->Name = L"AddChoice";
+			this->AddChoice->Size = System::Drawing::Size(75, 23);
+			this->AddChoice->TabIndex = 0;
+			this->AddChoice->Text = L"Add";
+			this->AddChoice->UseVisualStyleBackColor = true;
+			this->AddChoice->Click += gcnew System::EventHandler(this, &Form1::AddChoice_Click);
 			// 
 			// groupBox2
 			// 
@@ -208,6 +221,7 @@ namespace applesoranges {
 			this->CritWeightTextBox->Name = L"CritWeightTextBox";
 			this->CritWeightTextBox->Size = System::Drawing::Size(100, 20);
 			this->CritWeightTextBox->TabIndex = 3;
+			this->CritWeightTextBox->TextChanged += gcnew System::EventHandler(this, &Form1::CritWeightTextBox_TextChanged);
 			// 
 			// CritNameTextBox
 			// 
@@ -303,16 +317,6 @@ namespace applesoranges {
 			// 
 			this->saveFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &Form1::saveFileDialog1_FileOk);
 			// 
-			// AddChoice
-			// 
-			this->AddChoice->Location = System::Drawing::Point(36, 437);
-			this->AddChoice->Name = L"AddChoice";
-			this->AddChoice->Size = System::Drawing::Size(75, 23);
-			this->AddChoice->TabIndex = 0;
-			this->AddChoice->Text = L"Add";
-			this->AddChoice->UseVisualStyleBackColor = true;
-			this->AddChoice->Click += gcnew System::EventHandler(this, &Form1::AddChoice_Click);
-			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -355,7 +359,7 @@ private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::Co
 			 db.OpenProjectFile( path );
 
 			 // Recalculate total scores
-			 dcd::theModel.ReCalculate( CritTreeView );
+			 dcd::theModel.ReCalculate( /*CritTreeView*/ );
 
 			 // display model
 			 FillChoices();
@@ -374,6 +378,7 @@ public:
 	}
 	void FillScoreChoiceOnCriterion()
 	{
+		filling = true;
 		ScoreChoiceOnCriterion->Text = "Score choice " + 
 			msclr::interop::marshal_as<System::String ^>(dcd::theModel.theChoice.getSelected().myName) +
 			" on criterion " +
@@ -381,6 +386,7 @@ public:
 		ScoreTextBox->Text = dcd::theModel.theScore.getScore(
 			dcd::theModel.theChoice.getSelected(),
 			*dcd::theModel.critTree.getSelectedCriterion() ).ToString();
+		filling = false;
 	}
 private: System::Void CritTreeView_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) {
 
@@ -403,7 +409,12 @@ private: System::Void listChoices_SelectedIndexChanged(System::Object^  sender, 
 
 		 */
 private: System::Void ScoreTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-			 // assume blamk means zero
+
+			 // check for programmatic change
+			 if( filling )
+				 return;
+
+			 // assume blank means zero
 			 if( ScoreTextBox->Text == L"" )
 				 ScoreTextBox->Text = L"0";
 
@@ -415,10 +426,11 @@ private: System::Void ScoreTextBox_TextChanged(System::Object^  sender, System::
 					(float)Convert::ToDouble(ScoreTextBox->Text) ) );
 
 			 // recalculate total score
-			 dcd::theModel.ReCalculate( CritTreeView );
+			 dcd::theModel.ReCalculate( /*CritTreeView*/ );
 
 			 // display results
 			 FillChoices();
+
 		 }
 		 /** Add sibling to current criterion */
 private: System::Void AddSib_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -433,6 +445,12 @@ private: System::Void CritNameTextBox_TextChanged(System::Object^  sender, Syste
 			 msclr::interop::marshal_context ^ context = gcnew msclr::interop::marshal_context();
 			 dcd::theModel.critTree.getSelectedCriterion()->setName(  context->marshal_as<const wchar_t *>(CritNameTextBox->Text) );
 			 CritTreeView->SelectedNode->Text = CritNameTextBox->Text;
+		 }
+		 /** User changed criterion weight */
+private: System::Void CritWeightTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+		dcd::theModel.critTree.getSelectedCriterion()->setWeight( 
+			 msclr::interop::marshal_as<std::wstring>( CritWeightTextBox->Text ));
+		dcd::theModel.ReCalculate();
 		 }
 		 /** Save model */
 private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -451,6 +469,7 @@ private: System::Void AddChoice_Click(System::Object^  sender, System::EventArgs
 			 dcd::theModel.theChoice.Add( dcd::cChoice( context->marshal_as<const wchar_t *>(dlg->textBox1->Text) ) );
 			 FillChoices();
 		 }
+
 };
 }
 

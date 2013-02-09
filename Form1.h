@@ -402,10 +402,16 @@ public:
 		listChoices->Items->Clear();
 		dcd::cCriterion * root_crit = dcd::theModel.critTree.getRoot()->getCrit();
 		dcd::cCriterion * select_crit = dcd::theModel.critTree.getSelectedCriterion();
-		foreach( dcd::cChoice& choice, dcd::theModel.theChoice ) {
-			ListViewItem^ item = gcnew ListViewItem( gcnew System::String( choice.myName.c_str()), 0 );
-			item->SubItems->Add( String::Format("{0,3:F3}", dcd::theModel.theScore.getScore( choice, *root_crit)));
-			item->SubItems->Add(dcd::theModel.theScore.getScore( choice, *select_crit).ToString());
+		//foreach( const dcd::cChoice& choice, dcd::theModel.theChoice ) {
+		for( dcd::cChoiceVector::const_iterator c = dcd::theModel.theChoice.begin();
+			c != dcd::theModel.theChoice.end(); c++ )
+		{
+			String^ s = gcnew String( c->myName.c_str());
+			ListViewItem^ item = gcnew ListViewItem( s, 0 );
+			s = String::Format("{0,3:F3}", dcd::theModel.theScore.getScore( *c, *root_crit));
+			item->SubItems->Add( s );
+			s = dcd::theModel.theScore.getScore( *c, *select_crit).ToString();
+			item->SubItems->Add( s );
 			listChoices->Items->Add( item );
 		}
 	}

@@ -41,8 +41,23 @@ namespace dcd {
 			myScoreStyle = (score_style)_wtoi(table[row*4+3].c_str());
 		}
 		int getID()	const						{ return myID; }
-		void setWeight( const std::wstring& weight )	{ myWeight = weight; }
+
+		/** Set user assigned weight  */
+		void setWeight( const std::wstring& weight ){ myWeight = weight; }
 		const std::wstring& getWeight() const		{ return myWeight; }
+		/**  Set normalized weight
+
+		The normalized weight is the user assigned weight
+		divided by the the total user wights for all siblings
+
+		*/
+		void setNormalizedWeight( float w )			{ myNormalizedWeight = w; }
+		float getNormalizedWeight() const			{ return myNormalizedWeight; }
+		void CalcNormalizedWeight( float SumSiblingWeights )	
+		{ 
+			myNormalizedWeight = (float)_wtof(myWeight.c_str() ) / SumSiblingWeights;
+		}
+
 		const std::wstring& getName() const			{ return myName; }
 		void setName( const wchar_t * n )			{ myName = n; }
 		void setScoreStyle( score_style style )	{ myScoreStyle = style; }
@@ -54,6 +69,7 @@ namespace dcd {
 		int myID;
 		score_style myScoreStyle;
 		std::wstring myWeight;
+		float myNormalizedWeight;
 		std::wstring myName;
 	};
 

@@ -22,6 +22,9 @@ namespace dcd {
 		if( ! theChoice.size() )
 			return;
 
+		//Normalize the weights
+		NormalizeWeights( critTree.getRoot() );
+
 		//loop over children of root node
 		for( 
 			dcd::cCritTreeNode^ child = root->getFirstChild();
@@ -40,6 +43,39 @@ namespace dcd {
 		theChoice.SortByTotalScore();
 
 
+	}
+	/**
+
+	Calculate normalized weights.
+
+	The normalized weights of all children of each criterion must 
+	sum to 1.0
+
+	*/
+	void cModel::NormalizeWeights( dcd::cCritTreeNode^ root )
+	{
+		// Sum the weights
+		float sumWeights = 0;
+		// loop over all children
+		for(
+			dcd::cCritTreeNode^ child = root->getFirstChild();
+			child != nullptr;
+			child = child->getNextSibling() )
+			{
+				sumWeights += (float)_wtof(child->getCrit()->getWeight().c_str());
+			}
+		
+		// Normalize
+		for(
+			dcd::cCritTreeNode^ child = root->getFirstChild();
+			child != nullptr;
+			child = child->getNextSibling() )
+			{
+				child->getCrit()->CalcNormalizedWeight( sumWeights );
+
+				NormalizeWeights( child );
+			}
+		
 	}
 	/**
 

@@ -32,6 +32,7 @@ cScoreSet theScore;
 
 void ReCalculate();
 void Calculate( dcd::cCritTreeNode^ parent );
+void NormalizeWeights(  dcd::cCritTreeNode^ root );
 
 dcd::cCriterion & getRootCrterion()		{ return *critTree.getRoot()->getCrit(); }
 

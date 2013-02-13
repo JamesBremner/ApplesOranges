@@ -62,7 +62,7 @@ void cCriterion::EvaluateScores( cCriterion * parent )
 	foreach( float v, value )
 	{
 		theModel.theScore.AddScore( *choice++, *parent, 
-			weight * v + negative_offset );
+			myNormalizedWeight * v + negative_offset );
 	}
 
 	theModel.theScore.DumpOutput();
@@ -117,7 +117,11 @@ void cCriteriaTree::PropogateScoreUpwards( dcd::cCritTreeNode^ node_current )
 	dcd::cCriterion * crit_cur = node_current->getCrit();
 	while( node_current != myView->Nodes[0] ) {
 		dcd::cCriterion * crit_parent = ((dcd::cCritTreeNode^)node_current->Parent)->getCrit();
-		float weight = (float)_wtof( crit_cur->getWeight().c_str());
+		int sibling_count = node_current->Parent->GetNodeCount( false );
+		//float weight = (float)_wtof( crit_cur->getWeight().c_str());
+		float weight = crit_cur->getNormalizedWeight();
+
+		// loop over choices
 		foreach( dcd::cChoice& choice, theModel.theChoice ) {
 			float score = theModel.theScore.getScore( choice, *crit_cur );
 #ifdef _DEBUG
@@ -130,7 +134,7 @@ void cCriteriaTree::PropogateScoreUpwards( dcd::cCritTreeNode^ node_current )
 			System::Diagnostics::Debug::WriteLine( gcnew System::String(msg) );
 #endif
 			theModel.theScore.AddScore( choice, *crit_parent,
-				weight * score );
+				weight * score / sibling_count );
 
 			theModel.theScore.DumpOutput();
 		}

@@ -24,9 +24,9 @@ namespace dcd {
 
 		//loop over children of root node
 		for( 
-			dcd::cCritTreeNode^ child = (dcd::cCritTreeNode^)root->FirstNode;
+			dcd::cCritTreeNode^ child = root->getFirstChild();
 			child != nullptr;
-			child = (dcd::cCritTreeNode^)root->NextNode )
+			child = child->getNextSibling() )
 		{
 
 			Calculate( child );

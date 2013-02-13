@@ -490,6 +490,7 @@ private: System::Void CritWeightTextBox_TextChanged(System::Object^  sender, Sys
 		dcd::theModel.critTree.getSelectedCriterion()->setWeight( 
 			 msclr::interop::marshal_as<std::wstring>( CritWeightTextBox->Text ));
 		dcd::theModel.ReCalculate();
+		FillChoices();
 		 }
 		 /** Save model */
 private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {

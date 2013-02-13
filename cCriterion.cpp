@@ -41,16 +41,28 @@ void cCriterion::EvaluateScores( cCriterion * parent )
 		range = 1;
 
 	// position of each score on range
+	// so highest score gets a value of 1
+	// lowest a value of 0
 	value.clear();
 	foreach( float score, crit_score ) {
 		value.push_back( (score - min_score) / range );
 	}
 
+	// the weight assigned to this criterion
 	float weight = (float)_wtof(myWeight.c_str());
+
+	// a negative weight means that a high score on this criterion is a bad thing
+	// We allow for this by adding an offset of +1 to the weight * score
+	int negative_offset = 0;
+	if( weight < 0 )
+		negative_offset = 1;
+
+	// loop over choices, assigning weighted score
 	cChoiceVector::iterator choice = theModel.theChoice.begin();
 	foreach( float v, value )
 	{
-		theModel.theScore.AddScore( *choice++, *parent, weight * v );
+		theModel.theScore.AddScore( *choice++, *parent, 
+			weight * v + negative_offset );
 	}
 
 	theModel.theScore.DumpOutput();

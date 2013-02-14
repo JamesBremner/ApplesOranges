@@ -399,10 +399,10 @@ public:
 
 	void FillChoices(void)
 	{
+		filling = true;
 		listChoices->Items->Clear();
 		dcd::cCriterion * root_crit = dcd::theModel.critTree.getRoot()->getCrit();
 		dcd::cCriterion * select_crit = dcd::theModel.critTree.getSelectedCriterion();
-		//foreach( const dcd::cChoice& choice, dcd::theModel.theChoice ) {
 		for( dcd::cChoiceVector::const_iterator c = dcd::theModel.theChoice.begin();
 			c != dcd::theModel.theChoice.end(); c++ )
 		{
@@ -414,6 +414,7 @@ public:
 			item->SubItems->Add( s );
 			listChoices->Items->Add( item );
 		}
+		filling = false;
 	}
 	void FillSelectedChoice()
 	{
@@ -426,12 +427,18 @@ public:
 			*dcd::theModel.critTree.getSelectedCriterion() ).ToString();
 		filling = false;
 	}
-private: System::Void CritTreeView_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) {
-
+	void FillSelectedCriterion( dcd::cCriterion * crit )
+	{
+		filling = true;
+		CritNameTextBox->Text = gcnew String(crit->getName().c_str());
+		CritWeightTextBox->Text = gcnew String(crit->getWeight().c_str());
+		filling = false;
+	}
+private: System::Void CritTreeView_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e)
+		 {
 			 dcd::cCriterion * crit = ((dcd::cCritTreeNode^)e->Node)->getCrit();
 			 dcd::theModel.critTree.setSelected( crit );
-			 CritNameTextBox->Text = msclr::interop::marshal_as<System::String ^>(crit->getName());
-			 CritWeightTextBox->Text = msclr::interop::marshal_as<System::String ^>(crit->getWeight());
+			 FillSelectedCriterion( crit );
 			 FillSelectedChoice();
 			 FillChoices();
 		 }
@@ -487,10 +494,14 @@ private: System::Void CritNameTextBox_TextChanged(System::Object^  sender, Syste
 		 }
 		 /** User changed criterion weight */
 private: System::Void CritWeightTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-		dcd::theModel.critTree.getSelectedCriterion()->setWeight( 
-			 msclr::interop::marshal_as<std::wstring>( CritWeightTextBox->Text ));
-		dcd::theModel.ReCalculate();
-		FillChoices();
+
+			 // check for programmatic change
+			 if( filling )
+				 return;
+			 dcd::theModel.critTree.getSelectedCriterion()->setWeight( 
+				 msclr::interop::marshal_as<std::wstring>( CritWeightTextBox->Text ));
+			 dcd::theModel.ReCalculate();
+			 FillChoices();
 		 }
 		 /** Save model */
 private: System::Void saveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -512,6 +523,9 @@ private: System::Void AddChoice_Click(System::Object^  sender, System::EventArgs
 		 }
 		 /** User change name of choice */
 private: System::Void ChoiceNameTextBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+			 // check for programmatic change
+			 if( filling )
+				 return;
 			 dcd::theModel.theChoice.getSelected().myName = 
 				 msclr::interop::marshal_as<std::wstring>( ChoiceNameTextBox->Text );
 			 FillChoices();

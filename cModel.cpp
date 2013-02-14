@@ -23,18 +23,10 @@ namespace dcd {
 			return;
 
 		//Normalize the weights
-		NormalizeWeights( critTree.getRoot() );
+		NormalizeWeights( root );
 
-		//loop over children of root node
-		for( 
-			dcd::cCritTreeNode^ child = root->getFirstChild();
-			child != nullptr;
-			child = child->getNextSibling() )
-		{
-
-			Calculate( child );
-
-		}
+		// Calulate the score for the tree
+		Calculate( root );
 
 		theScore.DumpOutput();
 		System::Diagnostics::Debug::WriteLine("<-cModel::ReCalculate");
@@ -93,7 +85,7 @@ namespace dcd {
 			critTree.PropogateScoreUpwards( (dcd::cCritTreeNode^)current->Parent );
 
 			return;
-
+ 
 		}
 
 		// we have cildren, so zero any score we muight have

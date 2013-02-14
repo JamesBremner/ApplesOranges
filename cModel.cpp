@@ -48,7 +48,7 @@ namespace dcd {
 
 	Calculate normalized weights.
 
-	The normalized weights of all children of each criterion must 
+	The normalized absolute weights of all children of each criterion must 
 	sum to 1.0
 
 	*/
@@ -62,7 +62,7 @@ namespace dcd {
 			child != nullptr;
 			child = child->getNextSibling() )
 			{
-				sumWeights += (float)_wtof(child->getCrit()->getWeight().c_str());
+				sumWeights += (float)fabs(_wtof(child->getCrit()->getWeight().c_str()));
 			}
 		
 		// Normalize

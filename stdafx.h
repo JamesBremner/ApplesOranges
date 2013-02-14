@@ -3,6 +3,7 @@
 // are changed infrequently
 #pragma once
 
+#include <math.h>
 #include <msclr\marshal_cppstd.h>
 #include <string>
 #include <set>
